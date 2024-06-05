@@ -183,7 +183,9 @@ void Suite##suiteName(TinyTestRegistry* registry)                       \
   int main(int argc, char* argv[])                                      \
   {                                                                     \
     TinyTestRegistry registry;                                          \
-    registry.m_headSuite = NULL
+    registry.m_headSuite = NULL;                                        \
+    int failed;
+
 
 #define TINYTEST_RUN_SUITE(suiteName)                                   \
   Suite##suiteName(&registry) 
@@ -250,12 +252,14 @@ void Suite##suiteName(TinyTestRegistry* registry)                       \
       );                                                                \
     }                                                                   \
     printf("\n");                                                       \
+    failed = !!failedTests;                                             \
   }
 
 #define TINYTEST_END_MAIN()                                             \
     TINYTEST_INTERNAL_RUN_TESTS();                                      \
     printf("\n");                                                       \
-    TINYTEST_INTERNAL_FREE_TESTS()                                      \
+    TINYTEST_INTERNAL_FREE_TESTS();                                     \
+    return failed;                                                      \
   }
 
 #define TINYTEST_MAIN_SINGLE_SUITE(suiteName)                           \
